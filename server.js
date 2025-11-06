@@ -13,7 +13,10 @@ const defaultPdfOptions = {
   margin: { top: "20mm", bottom: "20mm", left: "15mm", right: "15mm" }
 };
 
+const CHROME_PATH = "/opt/render/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome-linux64/chrome";
+
 let browserPromise = puppeteer.launch({
+  executablePath: CHROME_PATH,
   args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
 });
 
