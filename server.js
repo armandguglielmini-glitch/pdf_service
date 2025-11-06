@@ -59,6 +59,9 @@ app.post("/generate-pdf", async (req, res) => {
     res.status(500).send("Erreur génération PDF");
   }
 });
+app.get("/", (req, res) => {
+  res.status(200).send("✅ Wevest PDF service is running");
+});
 
 // Route alternative base64
 app.post("/generate-pdf-base64", async (req, res) => {
