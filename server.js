@@ -41,13 +41,20 @@ async function generatePdfFromHtml(html, pdfOptions = {}) {
   try {
     const safeHtml = typeof html === "string" ? html : "";
     page = await browser.newPage();
+
+    // optionnel mais recommandé
     page.setDefaultTimeout(60_000);
-    await page.setContent(safeHtml, { waitUntil: "networkidle2", timeout: 60_000 });
-    return await page.pdf({ ...defaultPdfOptions, ...pdfOptions });
+    page.setDefaultNavigationTimeout(60_000);
+
+    await page.setContent(safeHtml, { waitUntil: "networkidle0" });
+    const buffer = await page.pdf({ ...defaultPdfOptions, ...pdfOptions });
+
+    return buffer;
   } finally {
     if (page) await page.close().catch(() => {});
   }
 }
+
 
 
 
