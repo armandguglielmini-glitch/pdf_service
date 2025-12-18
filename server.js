@@ -34,31 +34,21 @@ let browserPromise = (async () => {
     args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
   });
 })();
-
 async function generatePdfFromHtml(html, pdfOptions = {}) {
   const browser = await browserPromise;
-
   let page;
-  let context;
 
   try {
     const safeHtml = typeof html === "string" ? html : "";
-
-    context = await browser.createBrowserContext();
-    page = await context.newPage();
-
+    page = await browser.newPage();
     page.setDefaultTimeout(60_000);
-    page.setDefaultNavigationTimeout(60_000);
-
     await page.setContent(safeHtml, { waitUntil: "networkidle2", timeout: 60_000 });
-
-    const buffer = await page.pdf({ ...defaultPdfOptions, ...pdfOptions });
-    return buffer;
+    return await page.pdf({ ...defaultPdfOptions, ...pdfOptions });
   } finally {
     if (page) await page.close().catch(() => {});
-    if (context) await context.close().catch(() => {});
   }
 }
+
 
 
 // === ROUTES =======================================================
