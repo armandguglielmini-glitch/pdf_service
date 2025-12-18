@@ -73,7 +73,7 @@ app.post("/generate-pdf", async (req, res) => {
     res.send(pdfBuffer);
   } catch (e) {
     console.error("Erreur génération PDF :", e);
-    res.status(500).send("Erreur génération PDF");
+    res.status(500).send("Erreur génération PDF 6");
   }
 });
 app.get("/", (req, res) => {
