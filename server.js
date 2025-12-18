@@ -37,12 +37,29 @@ let browserPromise = (async () => {
 
 async function generatePdfFromHtml(html, pdfOptions = {}) {
   const browser = await browserPromise;
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: "networkidle0" });
-  const buffer = await page.pdf({ ...defaultPdfOptions, ...pdfOptions });
-  await page.close();
-  return buffer;
+
+  let page;
+  let context;
+
+  try {
+    const safeHtml = typeof html === "string" ? html : "";
+
+    context = await browser.createBrowserContext();
+    page = await context.newPage();
+
+    page.setDefaultTimeout(60_000);
+    page.setDefaultNavigationTimeout(60_000);
+
+    await page.setContent(safeHtml, { waitUntil: "networkidle2", timeout: 60_000 });
+
+    const buffer = await page.pdf({ ...defaultPdfOptions, ...pdfOptions });
+    return buffer;
+  } finally {
+    if (page) await page.close().catch(() => {});
+    if (context) await context.close().catch(() => {});
+  }
 }
+
 
 // === ROUTES =======================================================
 
